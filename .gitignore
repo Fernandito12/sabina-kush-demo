@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vercel/
+.npm-cache/
+.env
+.env.*
+!.env.example
+npm-debug.log*
+.astro/
+.sites-artifact.tar.gz

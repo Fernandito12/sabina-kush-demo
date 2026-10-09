@@ -1,0 +1,168 @@
+---
+import '../styles/global.css';
+import { getProducts } from '../lib/products';
+
+const { products, isDemo } = await getProducts();
+const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '5215512345678';
+const categories = ['Todo', ...new Set(products.map((product) => product.category).filter(Boolean))];
+const peso = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
+const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f3ec" />
+    <meta name="description" content="Tu antojo tiene nombre. Encuentra botanas, dulces y mezclas en Sabina Kush." />
+    <title>Sabina Kush — Antojos con actitud</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Sabina Kush, inicio">
+        <img src="/images/brand-banner.png" alt="Sabina Kush, Cantón Green" />
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#tienda">La tienda</a>
+        <a href="#nosotros">Nuestra onda</a>
+      </nav>
+      <button class="cart-trigger" id="open-cart" aria-label="Abrir carrito">
+        <span class="cart-icon" aria-hidden="true">＋</span><span>Mi pedido</span><b id="cart-count">0</b>
+      </button>
+    </header>
+
+    <main id="inicio">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="hero-kicker"><span></span> Cantón Green · Desde el antojo</p>
+          <h1 id="hero-title">Hoy se<br />antoja <em>algo</em><br />bueno.</h1>
+          <p class="hero-desc">Lo dulce, lo picosito y lo crujiente. Elige tu combo y te lo mandamos por WhatsApp.</p>
+          <a class="hero-link" href="#tienda">Encuentra tu antojo <span aria-hidden="true">↘</span></a>
+          <div class="hero-stamp" aria-hidden="true"><span>BUEN<br />ANTOJO</span><b>✳</b></div>
+        </div>
+        <div class="hero-art" aria-label="La botana de hoy">
+          <div class="art-disc disc-back"></div><div class="art-disc disc-front"></div>
+          <img class="mascot" src="/images/brand-mascot.png" alt="" />
+          <div class="art-note"><span>Un gustito</span><strong>merecido.</strong></div>
+          <span class="spark spark-one">✳</span><span class="spark spark-two">✴</span>
+          <span class="art-caption">TU LADO<br />FAVORITO</span>
+        </div>
+        <div class="hero-edge">SABINA KUSH · ANTOJOS DE BARRIO · SABINA KUSH · ANTOJOS DE BARRIO ·</div>
+      </section>
+
+      <section class="ticker" aria-label="Lo que se te antoje">
+        <div>Algo rico <span>✳</span> Algo picosito <span>✳</span> Algo para compartir <span>✳</span> Algo rico <span>✳</span> Algo picosito <span>✳</span></div>
+      </section>
+
+      <section class="shop section-wrap" id="tienda">
+        <div class="shop-heading">
+          <div><p class="section-kicker">La tiendita</p><h2>¿Qué se te antoja?</h2></div>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Busca tu antojo" aria-label="Buscar productos" /></label>
+        </div>
+        <div class="shop-tools">
+          <div class="filters" role="group" aria-label="Filtrar por categoría">
+            {categories.map((category, index) => <button class:list={['filter', { active: index === 0 }]} data-category={category} aria-pressed={index === 0 ? 'true' : 'false'}>{category}</button>)}
+          </div>
+          {isDemo && <span class="demo-badge"><i></i> Catálogo de muestra</span>}
+        </div>
+
+        <div class="product-grid" id="product-grid">
+          {products.map((product, index) => (
+            <article class="product-card" data-name={`${product.name} ${product.description} ${product.category} ${product.snack_type}`.toLowerCase()} data-category={product.category} style={`--accent: var(--${accents[index % accents.length]});`}>
+              <div class="product-visual">
+                <span class="product-type">{product.category || 'De la casa'}</span>
+                {product.image ? <img src={product.image} alt={product.name} loading="lazy" /> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>{['🌶️','🍬','🥔','🥜','🥭','🥨'][index % 6]}</span><i>{['¡Pica!','Dulcecito','Crunch','Botanero','De mango','Mix'][index % 6]}</i></div>}
+                {product.stock < 10 && product.stock > 0 && <span class="low-stock">Quedan {product.stock}</span>}
+              </div>
+              <div class="product-info">
+                <div class="product-heading"><h3>{product.name}</h3><span class="weight">{product.unit_weight}</span></div>
+                <p>{product.description}</p>
+                <div class="product-bottom"><div><strong>{peso.format(product.price)}</strong><small> / {product.unit_name || 'pieza'}</small></div><button class="add-button" data-id={product.id} aria-label={`Agregar ${product.name} al pedido`} disabled={product.stock < 1}>+</button></div>
+              </div>
+            </article>
+          ))}
+          <p class="no-results" id="no-results" hidden>No encontramos ese antojo. Prueba con otra palabra.</p>
+        </div>
+      </section>
+
+      <section class="manifesto" id="nosotros">
+        <div class="manifesto-mark">SK<span>✳</span></div>
+        <p>Sin tanta vuelta.<br />Solo <em>algo rico</em><br />y buena compañía.</p>
+        <a href="#tienda">Arma tu pedido <span aria-hidden="true">↗</span></a>
+      </section>
+      <footer><a href="#inicio">Sabina Kush</a><span>Hecho para el antojo.</span><span>© {new Date().getFullYear()} Cantón Green</span></footer>
+    </main>
+
+    <div class="cart-shade" id="cart-shade"></div>
+    <aside class="cart-panel" id="cart-panel" aria-label="Tu pedido" aria-hidden="true">
+      <div class="cart-head"><div><p class="section-kicker">Ya casi</p><h2>Tu pedido <span id="panel-count">(0)</span></h2></div><button class="close-cart" id="close-cart" aria-label="Cerrar carrito">×</button></div>
+      <div id="cart-items" class="cart-items"><div class="empty-cart"><span>✳</span><p>Tu pedido empieza con un antojo.</p><button id="browse-products">Ver la tienda</button></div></div>
+      <div class="cart-footer"><div class="cart-total"><span>Total</span><strong id="cart-total">$0</strong></div><p class="cart-hint">El envío y la forma de pago se confirman por WhatsApp.</p><a class="whatsapp-button" id="whatsapp-button" href="#" target="_blank" rel="noopener" aria-disabled="true">Pedir por WhatsApp <span>↗</span></a><button class="clear-cart" id="clear-cart">Vaciar pedido</button></div>
+    </aside>
+
+    <script define:vars={{ products, whatsappNumber }}>
+      const catalog = products;
+      const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
+      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+      let cart = [];
+      const panel = document.querySelector('#cart-panel');
+      const shade = document.querySelector('#cart-shade');
+      const openCart = () => { panel.classList.add('open'); shade.classList.add('visible'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('cart-open'); };
+      const closeCart = () => { panel.classList.remove('open'); shade.classList.remove('visible'); panel.setAttribute('aria-hidden', 'true'); document.body.classList.remove('cart-open'); };
+      const render = () => {
+        const qty = cart.reduce((sum, item) => sum + item.qty, 0);
+        const count = document.querySelector('#cart-count');
+        count.textContent = qty;
+        count.classList.toggle('has-items', qty > 0);
+        document.querySelector('#panel-count').textContent = `(${qty})`;
+        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        document.querySelector('#cart-total').textContent = money.format(total);
+        const items = document.querySelector('#cart-items');
+        if (!cart.length) {
+          items.innerHTML = '<div class="empty-cart"><span>✳</span><p>Tu pedido empieza con un antojo.</p><button id="browse-products">Ver la tienda</button></div>';
+          document.querySelector('#browse-products').addEventListener('click', () => { closeCart(); document.querySelector('#tienda').scrollIntoView({ behavior: 'smooth' }); });
+        } else {
+          items.innerHTML = cart.map((item) => `<div class="cart-row"><div><strong>${escapeHtml(item.name)}</strong><small>${money.format(item.price)} / ${escapeHtml(item.unit)}</small><button class="remove-item" data-remove="${item.id}">Quitar</button></div><div class="stepper"><button data-step="-1" data-id="${item.id}" aria-label="Quitar una unidad">−</button><span>${item.qty}</span><button data-step="1" data-id="${item.id}" aria-label="Agregar una unidad">+</button></div></div>`).join('');
+          items.querySelectorAll('[data-step]').forEach((button) => button.addEventListener('click', () => changeQty(Number(button.dataset.id), Number(button.dataset.step))));
+          items.querySelectorAll('[data-remove]').forEach((button) => button.addEventListener('click', () => { cart = cart.filter((item) => item.id !== Number(button.dataset.remove)); render(); }));
+        }
+        const whatsapp = document.querySelector('#whatsapp-button');
+        whatsapp.setAttribute('aria-disabled', cart.length ? 'false' : 'true');
+        const message = `Hola, quiero hacer este pedido:\n${cart.map((item) => `• ${item.qty} ${item.unit}(s) de ${item.name} — ${money.format(item.price * item.qty)}`).join('\n')}\n\nTotal: ${money.format(total)}`;
+        whatsapp.href = cart.length ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` : '#';
+      };
+      const changeQty = (id, delta) => { const item = cart.find((entry) => entry.id === id); const product = catalog.find((entry) => entry.id === id); if (!item || !product) return; item.qty = Math.min(product.stock, item.qty + delta); if (item.qty < 1) cart = cart.filter((entry) => entry.id !== id); render(); };
+      document.querySelectorAll('.add-button').forEach((button) => button.addEventListener('click', () => {
+        const product = catalog.find((entry) => entry.id === Number(button.dataset.id));
+        if (!product || product.stock < 1) return;
+        const existing = cart.find((item) => item.id === product.id);
+        if (existing) existing.qty = Math.min(product.stock, existing.qty + 1);
+        else cart.push({ id: product.id, name: product.name, price: Number(product.price), unit: product.unit_name || 'pieza', qty: 1 });
+        render(); button.textContent = '✓'; setTimeout(() => { button.textContent = '+'; }, 850);
+      }));
+      document.querySelector('#open-cart').addEventListener('click', openCart);
+      document.querySelector('#close-cart').addEventListener('click', closeCart);
+      shade.addEventListener('click', closeCart);
+      document.querySelector('#clear-cart').addEventListener('click', () => { cart = []; render(); });
+      document.querySelector('#whatsapp-button').addEventListener('click', (event) => { if (!cart.length) event.preventDefault(); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCart(); });
+      document.querySelector('#browse-products')?.addEventListener('click', () => { closeCart(); document.querySelector('#tienda').scrollIntoView({ behavior: 'smooth' }); });
+      document.querySelectorAll('.filter').forEach((button) => button.addEventListener('click', () => {
+        document.querySelectorAll('.filter').forEach((filter) => { filter.classList.remove('active'); filter.setAttribute('aria-pressed', 'false'); });
+        button.classList.add('active'); button.setAttribute('aria-pressed', 'true'); filterProducts();
+      }));
+      document.querySelector('#search').addEventListener('input', filterProducts);
+      function filterProducts() {
+        const term = document.querySelector('#search').value.trim().toLowerCase();
+        const category = document.querySelector('.filter.active')?.dataset.category || 'Todo';
+        let visible = 0;
+        document.querySelectorAll('.product-card').forEach((card) => { const match = (category === 'Todo' || card.dataset.category === category) && card.dataset.name.includes(term); card.hidden = !match; if (match) visible += 1; });
+        document.querySelector('#no-results').hidden = visible > 0;
+      }
+    </script>
+  </body>
+</html>
