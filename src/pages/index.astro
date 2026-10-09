@@ -29,6 +29,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       <symbol id="icon-thc" viewBox="0 0 24 24"><path d="M12 2.8S5.5 10 5.5 14.6a6.5 6.5 0 0 0 13 0C18.5 10 12 2.8 12 2.8Z"/><path d="M9.5 15.4a2.6 2.6 0 0 0 2.6 2.6"/></symbol>
       <symbol id="icon-weight" viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8a3 3 0 0 1 6 0M12 12l2 3"/></symbol>
       <symbol id="icon-stock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.6 2.6L16.5 9"/></symbol>
+      <symbol id="icon-cap" viewBox="0 0 24 24"><path d="M3 13.5c.3-4.4 4-7.5 9-7.5s8.7 3.1 9 7.5c-2.3 1.8-5.3 2.7-9 2.7s-6.7-.9-9-2.7Z"/><path d="M3 13.5c2.5 1.4 5.5 2.2 9 2.2s6.5-.8 9-2.2M12 6v10.4"/></symbol>
     </svg>
     <header class="topbar">
       <a class="brand" href="#inicio" aria-label="Sabina Kush, inicio">
@@ -82,15 +83,15 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
           {products.map((product, index) => (
             <article class="product-card" data-name={`${product.name} ${product.description} ${product.category} ${product.snack_type}`.toLowerCase()} data-category={product.category} style={`--accent: var(--${accents[index % accents.length]});`}>
               <div class:list={['product-visual', { 'product-visual--sheet': product.image_fit === 'contain' }]}>
-                <span class="product-type"><svg class="mini-icon" aria-hidden="true"><use href="#icon-leaf" /></svg>{product.category || 'Flores'}</span>
+                <span class="product-type"><svg class="mini-icon" aria-hidden="true"><use href={product.category === 'Accesorios' ? '#icon-cap' : '#icon-leaf'} /></svg>{product.category || 'Flores'}</span>
                 {product.image ? <button class="product-image-trigger" type="button" aria-label={`Ampliar imagen de ${product.name}`} data-image={product.image} data-image-alt={`Flor de ${product.name}`}><img class:list={['product-photo', { 'product-photo--sheet': product.image_fit === 'contain' }]} src={product.image} alt="" loading="lazy" /><span class="image-zoom-hint" aria-hidden="true">⌕ Ampliar</span></button> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>🍃</span><i>Selección</i></div>}
                 {!product.unlimited_stock && product.stock < 10 && product.stock > 0 && <span class="low-stock">Quedan {product.stock}</span>}
               </div>
               <div class="product-info">
                 <div class="product-heading"><h3>{product.name}</h3></div>
                 <div class="product-facts" aria-label={`Detalles de ${product.name}`}>
-                  <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-leaf" /></svg>{product.profile_type || product.snack_type || 'Híbrida'}</span>
-                  <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-thc" /></svg>{product.thc_profile || product.intensity || '20–25% THC'}</span>
+                  <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href={product.category === 'Accesorios' ? '#icon-cap' : '#icon-leaf'} /></svg>{product.profile_type || product.snack_type || 'Híbrida'}</span>
+                  <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href={product.category === 'Accesorios' ? '#icon-stock' : '#icon-thc'} /></svg>{product.product_badge || product.thc_profile || product.intensity || '20–25% THC'}</span>
                   <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-weight" /></svg>{product.unit_weight || '28 g'}</span>
                   <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-stock" /></svg>Siempre disponible</span>
                 </div>

@@ -15,6 +15,7 @@ export type Product = {
   stock: number;
   unlimited_stock?: boolean;
   profile_type?: string;
+  product_badge?: string;
   thc_profile?: string;
   image_fit?: 'contain' | 'cover';
 };
@@ -40,6 +41,10 @@ const demoProducts: Product[] = [
   { id: 6, name: 'Gelato Kush', summary: productProfiles.gelato.summary, description: productProfiles.gelato.description, image: demoImage('flor-cosecha.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
   { id: 7, name: 'Frosty', summary: productProfiles.frosty.summary, description: productProfiles.frosty.description, image: demoImage('frosty-ficha.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '24% THC · 1% CBD', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: '70% sativa · 30% índica', thc_profile: '24% THC · 1% CBD', image_fit: 'contain' },
   { id: 8, name: 'Cantón Green', summary: productProfiles.canton.summary, description: productProfiles.canton.description, image: demoImage('seleccion-canton-green.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 9, name: 'Gorra 1', summary: 'Negra con bordado frontal en tipografía ornamental.', description: 'Gorra negra con cierre ajustable y bordado frontal de estilo ornamental en tono dorado. Diseño visto por la parte posterior.', image: demoImage('gorra-1.jpeg'), category: 'Accesorios', snack_type: 'Gorra', intensity: 'Pieza', unit_name: 'pieza', unit_weight: '1 pieza', price: 400, stock: 9999, unlimited_stock: true, profile_type: 'Cierre ajustable', product_badge: 'Bordado ornamental' },
+  { id: 10, name: 'Gorra 2', summary: 'Negra con bordado botánico al frente.', description: 'Gorra negra de visera curva con un bordado botánico en tonos verdes. Un diseño discreto con el detalle al centro.', image: demoImage('gorra-2.jpeg'), category: 'Accesorios', snack_type: 'Gorra', intensity: 'Pieza', unit_name: 'pieza', unit_weight: '1 pieza', price: 400, stock: 9999, unlimited_stock: true, profile_type: 'Visera curva', product_badge: 'Bordado botánico' },
+  { id: 11, name: 'Gorra 3', summary: 'Negra con parche Cantón Verde.', description: 'Gorra negra con visera curva y parche frontal ilustrado con la marca Cantón Verde. La foto muestra el producto en tienda.', image: demoImage('gorra-3.jpeg'), category: 'Accesorios', snack_type: 'Gorra', intensity: 'Pieza', unit_name: 'pieza', unit_weight: '1 pieza', price: 400, stock: 9999, unlimited_stock: true, profile_type: 'Visera curva', product_badge: 'Parche Cantón Verde' },
+  { id: 12, name: 'Gorra 4', summary: 'Negra con bordado #SINSEMILLA y fresa.', description: 'Gorra negra con bordado blanco #SINSEMILLA y un pequeño motivo de fresa roja con hojas verdes.', image: demoImage('gorra-4.jpeg'), category: 'Accesorios', snack_type: 'Gorra', intensity: 'Pieza', unit_name: 'pieza', unit_weight: '1 pieza', price: 400, stock: 9999, unlimited_stock: true, profile_type: 'Bordado frontal', product_badge: '#SINSEMILLA' },
 ];
 
 export async function getProducts(): Promise<{ products: Product[]; isDemo: boolean }> {
