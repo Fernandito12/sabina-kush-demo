@@ -7,7 +7,7 @@ const isUserSite = onGitHubPages && repository === `${owner}.github.io`;
 
 export default defineConfig({
   ...(onGitHubPages ? { site: `https://${owner}.github.io` } : {}),
-  base: onGitHubPages && !isUserSite ? `/${repository}` : '/',
+  base: onGitHubPages && !isUserSite ? `/${repository}/` : '/',
   output: 'static',
   server: { host: true },
 });
