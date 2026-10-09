@@ -12,15 +12,24 @@ export type Product = {
   unit_weight: string;
   price: number;
   stock: number;
+  unlimited_stock?: boolean;
+  profile_type?: string;
+  thc_profile?: string;
+  image_fit?: 'contain' | 'cover';
 };
 
+const catalogDescription = 'Aroma dulce, cremoso y cítrico, con notas de frutos rojos y un final terroso y especiado. Perfil terpénico orientativo: cariofileno, limoneno y humuleno o mirceno. Se reportan euforia, ánimo elevado, creatividad y relajación corporal; la experiencia cambia según la persona y el lote.';
+const demoImage = (filename: string) => `${import.meta.env.BASE_URL}images/products/${filename}`;
+
 const demoProducts: Product[] = [
-  { id: 1, name: 'Takis Fuego', description: 'El crujido intenso con chile y limón que prende cualquier antojo.', image: `${import.meta.env.BASE_URL}images/products/grass-1.jpg`, category: 'Botanas', snack_type: 'Picante', intensity: 'Alta', unit_name: 'bolsa', unit_weight: '56 g', price: 22, stock: 18 },
-  { id: 2, name: 'Gomitas enchiladas', description: 'Gomitas suaves, bañadas en chamoy y chile de la casa.', image: `${import.meta.env.BASE_URL}images/products/grass-2.jpg`, category: 'Dulces', snack_type: 'Agridulce', intensity: 'Media', unit_name: 'bolsa', unit_weight: '150 g', price: 38, stock: 12 },
-  { id: 3, name: 'Papas clásicas', description: 'Doraditas, crujientes y listas para compartir (si quieres).', image: `${import.meta.env.BASE_URL}images/products/grass-3.webp`, category: 'Botanas', snack_type: 'Salado', intensity: 'Suave', unit_name: 'bolsa', unit_weight: '45 g', price: 19, stock: 24 },
-  { id: 4, name: 'Cacahuates japoneses', description: 'El crunch de siempre para la tarde, la peli y la botanita.', image: '', category: 'Botanas', snack_type: 'Salado', intensity: 'Suave', unit_name: 'bolsa', unit_weight: '100 g', price: 25, stock: 16 },
-  { id: 5, name: 'Paleta de mango', description: 'Dulce, picosita y con sabor a recreo de toda la vida.', image: '', category: 'Dulces', snack_type: 'Agridulce', intensity: 'Media', unit_name: 'pieza', unit_weight: '1 pieza', price: 12, stock: 30 },
-  { id: 6, name: 'Mix botanero', description: 'Una mezcla botanera para que cada puño traiga algo distinto.', image: '', category: 'Botanas', snack_type: 'Mezcla', intensity: 'Media', unit_name: 'bolsa', unit_weight: '180 g', price: 55, stock: 9 },
+  { id: 1, name: 'Sabina Kush', description: catalogDescription, image: demoImage('grass-1.jpg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 2, name: 'PitaKush', description: catalogDescription, image: demoImage('grass-2.jpg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 3, name: 'Green House', description: catalogDescription, image: demoImage('grass-3.webp'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 4, name: 'Kush', description: catalogDescription, image: demoImage('flor-morada-macro.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 5, name: 'Weed Kush', description: catalogDescription, image: demoImage('flor-premium-seleccion.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 6, name: 'Gelato Kush', description: catalogDescription, image: demoImage('flor-cosecha.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
+  { id: 7, name: 'Frosty', description: 'Según la ficha de la variedad: híbrida con dominancia sativa, 24% THC y 1% CBD. Aromas dulces, cremosos y especiados, con un efecto descrito como relajante y equilibrado. Datos sujetos a confirmación por lote.', image: demoImage('frosty-ficha.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '24% THC · 1% CBD', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: '70% sativa · 30% índica', thc_profile: '24% THC · 1% CBD', image_fit: 'contain' },
+  { id: 8, name: 'Cantón Green', description: catalogDescription, image: demoImage('seleccion-canton-green.jpeg'), category: 'Flores', snack_type: 'Híbrida', intensity: '20–25% THC', unit_name: 'paquete', unit_weight: '28 g', price: 1000, stock: 9999, unlimited_stock: true, profile_type: 'Índica dominante', thc_profile: '20–25% THC' },
 ];
 
 export async function getProducts(): Promise<{ products: Product[]; isDemo: boolean }> {
