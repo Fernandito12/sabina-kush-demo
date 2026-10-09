@@ -82,9 +82,9 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
         <div class="product-grid" id="product-grid">
           {products.map((product, index) => (
             <article class="product-card" data-name={`${product.name} ${product.description} ${product.category} ${product.snack_type}`.toLowerCase()} data-category={product.category} style={`--accent: var(--${accents[index % accents.length]});`}>
-              <div class:list={['product-visual', { 'product-visual--sheet': product.image_fit === 'contain' }]}>
+              <div class:list={['product-visual', { 'product-visual--sheet': product.image_fit === 'contain', 'product-visual--accessory': product.category === 'Accesorios' }]}>
                 <span class="product-type"><svg class="mini-icon" aria-hidden="true"><use href={product.category === 'Accesorios' ? '#icon-cap' : '#icon-leaf'} /></svg>{product.category || 'Flores'}</span>
-                {product.image ? <button class="product-image-trigger" type="button" aria-label={`Ampliar imagen de ${product.name}`} data-image={product.image} data-image-alt={`Flor de ${product.name}`}><img class:list={['product-photo', { 'product-photo--sheet': product.image_fit === 'contain' }]} src={product.image} alt="" loading="lazy" /><span class="image-zoom-hint" aria-hidden="true">⌕ Ampliar</span></button> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>🍃</span><i>Selección</i></div>}
+                {product.image ? <button class:list={['product-image-trigger', { 'product-image-trigger--accessory': product.category === 'Accesorios' }]} type="button" aria-label={`Ampliar imagen de ${product.name}`} data-image={product.image} data-image-alt={`Producto ${product.name}`}><img class:list={['product-photo', { 'product-photo--sheet': product.image_fit === 'contain' }]} src={product.image} alt="" loading="lazy" /><span class="image-zoom-hint" aria-hidden="true">⌕ Ampliar</span></button> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>🍃</span><i>Selección</i></div>}
                 {!product.unlimited_stock && product.stock < 10 && product.stock > 0 && <span class="low-stock">Quedan {product.stock}</span>}
               </div>
               <div class="product-info">
