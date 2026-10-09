@@ -17,6 +17,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
     <meta name="theme-color" content="#f5f3ec" />
     <meta name="description" content="Tu antojo tiene nombre. Encuentra botanas, dulces y mezclas en Sabina Kush." />
     <title>Sabina Kush — Antojos con actitud</title>
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -24,7 +25,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
   <body>
     <header class="topbar">
       <a class="brand" href="#inicio" aria-label="Sabina Kush, inicio">
-        <img src="/images/brand-banner.png" alt="Sabina Kush, Cantón Green" />
+        <img src={`${import.meta.env.BASE_URL}images/brand-banner.png`} alt="Sabina Kush, Cantón Green" />
       </a>
       <nav aria-label="Navegación principal">
         <a href="#tienda">La tienda</a>
@@ -46,7 +47,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
         </div>
         <div class="hero-art" aria-label="La botana de hoy">
           <div class="art-disc disc-back"></div><div class="art-disc disc-front"></div>
-          <img class="mascot" src="/images/brand-mascot.png" alt="" />
+          <img class="mascot" src={`${import.meta.env.BASE_URL}images/brand-mascot.png`} alt="" />
           <div class="art-note"><span>Un gustito</span><strong>merecido.</strong></div>
           <span class="spark spark-one">✳</span><span class="spark spark-two">✴</span>
           <span class="art-caption">TU LADO<br />FAVORITO</span>

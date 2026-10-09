@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "astro": "^5.7.0",
-    "mysql2": "^3.14.0",
-    "sabina-kush-shop": "file:"
+    "mysql2": "^3.14.0"
   }
 }

@@ -8,3 +8,7 @@ dist/
 npm-debug.log*
 .astro/
 .sites-artifact.tar.gz
+.tools/
+.cloudflare-preview.config.mjs
+
+/cpanel-api/
