@@ -94,7 +94,11 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
                   <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-weight" /></svg>{product.unit_weight || '28 g'}</span>
                   <span class="product-fact"><svg class="mini-icon" aria-hidden="true"><use href="#icon-stock" /></svg>Siempre disponible</span>
                 </div>
-                <p>{product.description}</p>
+                <p class="product-summary">{product.summary || product.description}</p>
+                <details class="product-details">
+                  <summary>Ver ficha completa <span aria-hidden="true">＋</span></summary>
+                  <p>{product.description}</p>
+                </details>
                 <div class="product-bottom"><div><strong>{peso.format(product.price)}</strong><small> / {product.unit_name || 'paquete'}</small></div><button class="add-button" data-id={product.id} aria-label={`Agregar ${product.name} al pedido`} disabled={!product.unlimited_stock && product.stock < 1}>+</button></div>
               </div>
             </article>
