@@ -148,6 +148,18 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       </div>
       <div class="payment-dialog__content">
         <p>Haz la transferencia desde la app de tu banco. Después, envía el comprobante en el chat de WhatsApp para continuar con tu pedido.</p>
+        <section class="payment-data" aria-label="Datos bancarios para copiar">
+          <div class="payment-data__heading"><h3>Datos bancarios</h3><button class="copy-payment-button copy-payment-button--all" id="copy-all-payment" type="button">⧉ Copiar todo</button></div>
+          <div class="payment-data__rows">
+            <div class="payment-data__row"><div><span>Banco</span><strong>Santander</strong></div><button class="copy-payment-button" type="button" data-copy-value="Santander" aria-label="Copiar banco">Copiar</button></div>
+            <div class="payment-data__row"><div><span>Titular</span><strong>ELYDETH ESPINOSA</strong></div><button class="copy-payment-button" type="button" data-copy-value="ELYDETH ESPINOSA" aria-label="Copiar titular">Copiar</button></div>
+            <div class="payment-data__row"><div><span>Tarjeta asociada</span><strong>5579 0830 4330 3615</strong></div><button class="copy-payment-button" type="button" data-copy-value="5579 0830 4330 3615" aria-label="Copiar tarjeta asociada">Copiar</button></div>
+            <div class="payment-data__row"><div><span>CLABE</span><strong>014854250025383176</strong></div><button class="copy-payment-button" type="button" data-copy-value="014854250025383176" aria-label="Copiar CLABE">Copiar</button></div>
+            <div class="payment-data__row"><div><span>Número de cuenta</span><strong>25002538317</strong></div><button class="copy-payment-button" type="button" data-copy-value="25002538317" aria-label="Copiar número de cuenta">Copiar</button></div>
+            <div class="payment-data__row"><div><span>Concepto</span><strong>ROPA</strong></div><button class="copy-payment-button" type="button" data-copy-value="ROPA" aria-label="Copiar concepto">Copiar</button></div>
+          </div>
+          <p class="payment-copy-status" id="payment-copy-status" aria-live="polite"></p>
+        </section>
         <figure class="payment-card"><img src={`${import.meta.env.BASE_URL}images/payment.png`} alt="Datos bancarios para realizar la transferencia" /><figcaption>Revisa los datos antes de confirmar la transferencia.</figcaption></figure>
       </div>
       <div class="payment-dialog__actions">
@@ -231,6 +243,33 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       document.querySelector('#back-to-cart').addEventListener('click', () => paymentDialog.close());
       paymentDialog.addEventListener('click', (event) => { if (event.target === paymentDialog) paymentDialog.close(); });
       document.querySelector('#continue-whatsapp').addEventListener('click', () => setTimeout(() => paymentDialog.close(), 0));
+      const paymentCopyStatus = document.querySelector('#payment-copy-status');
+      let paymentCopyTimer = 0;
+      const copyPaymentData = async (value) => {
+        try {
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+          else throw new Error('Clipboard API no disponible');
+          paymentCopyStatus.textContent = 'Copiado al portapapeles';
+        } catch {
+          const temporaryField = document.createElement('textarea');
+          temporaryField.value = value;
+          temporaryField.setAttribute('readonly', '');
+          temporaryField.style.position = 'fixed';
+          temporaryField.style.opacity = '0';
+          document.body.append(temporaryField);
+          temporaryField.select();
+          const copied = document.execCommand('copy');
+          temporaryField.remove();
+          paymentCopyStatus.textContent = copied ? 'Copiado al portapapeles' : 'No se pudo copiar; selecciona el dato y cópialo manualmente.';
+        }
+        window.clearTimeout(paymentCopyTimer);
+        paymentCopyTimer = window.setTimeout(() => { paymentCopyStatus.textContent = ''; }, 2400);
+      };
+      document.querySelectorAll('[data-copy-value]').forEach((button) => button.addEventListener('click', () => copyPaymentData(button.dataset.copyValue)));
+      document.querySelector('#copy-all-payment').addEventListener('click', () => {
+        const values = [...document.querySelectorAll('.payment-data__row')].map((row) => `${row.querySelector('span').textContent}: ${row.querySelector('strong').textContent}`);
+        copyPaymentData(values.join('\n'));
+      });
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCart(); });
       document.querySelector('#browse-products')?.addEventListener('click', () => { closeCart(); document.querySelector('#tienda').scrollIntoView({ behavior: 'smooth' }); });
       document.querySelectorAll('.filter').forEach((button) => button.addEventListener('click', () => {
