@@ -203,7 +203,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       document.querySelector('#clear-cart').addEventListener('click', () => { cart = []; render(); });
       document.querySelector('#whatsapp-button').addEventListener('click', (event) => {
         if (!cart.length) { event.preventDefault(); return; }
-        const trackEvent = (window as Window & { gtag?: (...args: any[]) => void }).gtag;
+        const trackEvent = window.gtag;
         trackEvent?.('event', 'whatsapp_order_request');
       });
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCart(); });
