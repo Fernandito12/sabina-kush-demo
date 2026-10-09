@@ -18,7 +18,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout, build, and upload site
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Build and upload Astro site
         uses: withastro/action@v6
         env:
           PUBLIC_WHATSAPP_NUMBER: '529513109824'
