@@ -21,12 +21,11 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
     <title>Sabina Kush — Flores Cantón Green</title>
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     {gaMeasurementId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>}
-    {gaMeasurementId && <script is:inline define:vars={{ gaMeasurementId }}>
+    {gaMeasurementId && <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){window.dataLayer.push(arguments);}
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', gaMeasurementId);
+      window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-GYMW4E8S0H');
     </script>}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
