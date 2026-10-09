@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/catalog.css';
+import '../styles/payment.css';
 import { getProducts } from '../lib/products';
 
 const { products, isDemo } = await getProducts();
@@ -136,8 +137,23 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
     <aside class="cart-panel" id="cart-panel" aria-label="Tu pedido" aria-hidden="true">
       <div class="cart-head"><div><p class="section-kicker">Ya casi</p><h2>Tu pedido <span id="panel-count">(0)</span></h2></div><button class="close-cart" id="close-cart" aria-label="Cerrar carrito">×</button></div>
       <div id="cart-items" class="cart-items"><div class="empty-cart"><span>🍃</span><p>Aún no agregas una variedad.</p><button id="browse-products">Ver el catálogo</button></div></div>
-      <div class="cart-footer"><div class="cart-total"><span>Total</span><strong id="cart-total">$0.00</strong></div><p class="cart-hint">El envío y la forma de pago se confirman por WhatsApp.</p><a class="whatsapp-button" id="whatsapp-button" href="#" target="_blank" rel="noopener" aria-disabled="true">Pedir por WhatsApp <span>↗</span></a><button class="clear-cart" id="clear-cart">Vaciar pedido</button></div>
+      <div class="cart-footer"><div class="cart-total"><span>Total</span><strong id="cart-total">$0.00</strong></div><p class="cart-hint">Consulta los datos de transferencia y continúa tu pedido por WhatsApp.</p><a class="whatsapp-button" id="whatsapp-button" href="#" target="_blank" rel="noopener" aria-disabled="true" aria-haspopup="dialog" aria-controls="payment-dialog">Pedir por WhatsApp <span>↗</span></a><button class="clear-cart" id="clear-cart">Vaciar pedido</button></div>
     </aside>
+
+    <dialog class="payment-dialog" id="payment-dialog" aria-labelledby="payment-title">
+      <div class="payment-dialog__header">
+        <div><p class="section-kicker">Transferencia bancaria</p><h2 id="payment-title">Datos para tu pago</h2></div>
+        <button class="payment-dialog__close" id="close-payment" type="button" aria-label="Cerrar datos de pago">×</button>
+      </div>
+      <div class="payment-dialog__content">
+        <p>Haz la transferencia desde la app de tu banco. Después, envía el comprobante en el chat de WhatsApp para continuar con tu pedido.</p>
+        <figure class="payment-card"><img src={`${import.meta.env.BASE_URL}images/payment.png`} alt="Datos bancarios para realizar la transferencia" /><figcaption>Revisa los datos antes de confirmar la transferencia.</figcaption></figure>
+      </div>
+      <div class="payment-dialog__actions">
+        <button class="payment-dialog__back" id="back-to-cart" type="button">Volver al pedido</button>
+        <a class="whatsapp-button payment-dialog__continue" id="continue-whatsapp" href="#" target="_blank" rel="noopener">Continuar a WhatsApp <span>↗</span></a>
+      </div>
+    </dialog>
 
     <dialog class="image-lightbox" id="image-lightbox" aria-label="Imagen ampliada del producto">
       <button class="lightbox-close" type="button" aria-label="Cerrar imagen ampliada">×</button>
@@ -152,6 +168,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       let cart = [];
       const panel = document.querySelector('#cart-panel');
       const shade = document.querySelector('#cart-shade');
+      const paymentDialog = document.querySelector('#payment-dialog');
       const lightbox = document.querySelector('#image-lightbox');
       const lightboxImage = document.querySelector('#lightbox-image');
       const closeLightbox = () => lightbox.close();
@@ -185,7 +202,9 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
         const whatsapp = document.querySelector('#whatsapp-button');
         whatsapp.setAttribute('aria-disabled', cart.length ? 'false' : 'true');
         const message = `Hola, quiero hacer este pedido:\n${cart.map((item) => `• ${item.qty} × ${item.name} (${item.weight}) — ${money.format(item.price * item.qty)}`).join('\n')}\n\nTotal: ${money.format(total)}`;
-        whatsapp.href = cart.length ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` : '#';
+        const whatsappUrl = cart.length ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` : '#';
+        whatsapp.href = whatsappUrl;
+        document.querySelector('#continue-whatsapp').href = whatsappUrl;
       };
       const changeQty = (id, delta) => { const item = cart.find((entry) => entry.id === id); const product = catalog.find((entry) => entry.id === id); if (!item || !product) return; item.qty = product.unlimited_stock ? item.qty + delta : Math.min(product.stock, item.qty + delta); if (item.qty < 1) cart = cart.filter((entry) => entry.id !== id); render(); };
       document.querySelectorAll('.add-button').forEach((button) => button.addEventListener('click', () => {
@@ -202,9 +221,15 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       document.querySelector('#clear-cart').addEventListener('click', () => { cart = []; render(); });
       document.querySelector('#whatsapp-button').addEventListener('click', (event) => {
         if (!cart.length) { event.preventDefault(); return; }
+        event.preventDefault();
         const trackEvent = window.gtag;
         trackEvent?.('event', 'whatsapp_order_request');
+        paymentDialog.showModal();
       });
+      document.querySelector('#close-payment').addEventListener('click', () => paymentDialog.close());
+      document.querySelector('#back-to-cart').addEventListener('click', () => paymentDialog.close());
+      paymentDialog.addEventListener('click', (event) => { if (event.target === paymentDialog) paymentDialog.close(); });
+      document.querySelector('#continue-whatsapp').addEventListener('click', () => setTimeout(() => paymentDialog.close(), 0));
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCart(); });
       document.querySelector('#browse-products')?.addEventListener('click', () => { closeCart(); document.querySelector('#tienda').scrollIntoView({ behavior: 'smooth' }); });
       document.querySelectorAll('.filter').forEach((button) => button.addEventListener('click', () => {
