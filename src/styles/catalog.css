@@ -180,6 +180,35 @@
   line-height: 1.6;
 }
 
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+  will-change: transform;
+}
+.ticker .ticker-group { min-width: 0; animation: none; }
+
+.ticker-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 25px;
+  padding-right: 25px;
+}
+
+.ticker-group i {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.ticker:hover .ticker-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
+  .ticker-group[aria-hidden="true"] { display: none; }
+}
+
 @media (max-width: 600px) {
   .product-visual--accessory { height: 180px; }
   .image-lightbox { width: 96vw; padding: 12px; }
