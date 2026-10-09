@@ -5,6 +5,7 @@ import { getProducts } from '../lib/products';
 
 const { products, isDemo } = await getProducts();
 const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '529513109824';
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 const categories = ['Todo', ...new Set(products.map((product) => product.category).filter(Boolean))];
 const peso = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
@@ -19,6 +20,14 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
     <meta name="description" content="Explora la selección de flores Sabina Kush y Cantón Green. Presentaciones de 28 g con pedido por WhatsApp." />
     <title>Sabina Kush — Flores Cantón Green</title>
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    {gaMeasurementId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>}
+    {gaMeasurementId && <script is:inline define:vars={{ gaMeasurementId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){window.dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', gaMeasurementId);
+    </script>}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -192,7 +201,11 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       document.querySelector('#close-cart').addEventListener('click', closeCart);
       shade.addEventListener('click', closeCart);
       document.querySelector('#clear-cart').addEventListener('click', () => { cart = []; render(); });
-      document.querySelector('#whatsapp-button').addEventListener('click', (event) => { if (!cart.length) event.preventDefault(); });
+      document.querySelector('#whatsapp-button').addEventListener('click', (event) => {
+        if (!cart.length) { event.preventDefault(); return; }
+        const trackEvent = (window as Window & { gtag?: (...args: any[]) => void }).gtag;
+        trackEvent?.('event', 'whatsapp_order_request');
+      });
       document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCart(); });
       document.querySelector('#browse-products')?.addEventListener('click', () => { closeCart(); document.querySelector('#tienda').scrollIntoView({ behavior: 'smooth' }); });
       document.querySelectorAll('.filter').forEach((button) => button.addEventListener('click', () => {
