@@ -83,7 +83,7 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
             <article class="product-card" data-name={`${product.name} ${product.description} ${product.category} ${product.snack_type}`.toLowerCase()} data-category={product.category} style={`--accent: var(--${accents[index % accents.length]});`}>
               <div class:list={['product-visual', { 'product-visual--sheet': product.image_fit === 'contain' }]}>
                 <span class="product-type"><svg class="mini-icon" aria-hidden="true"><use href="#icon-leaf" /></svg>{product.category || 'Flores'}</span>
-                {product.image ? <img class:list={['product-photo', { 'product-photo--sheet': product.image_fit === 'contain' }]} src={product.image} alt={`Flor de ${product.name}`} loading="lazy" /> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>🍃</span><i>Selección</i></div>}
+                {product.image ? <button class="product-image-trigger" type="button" aria-label={`Ampliar imagen de ${product.name}`} data-image={product.image} data-image-alt={`Flor de ${product.name}`}><img class:list={['product-photo', { 'product-photo--sheet': product.image_fit === 'contain' }]} src={product.image} alt="" loading="lazy" /><span class="image-zoom-hint" aria-hidden="true">⌕ Ampliar</span></button> : <div class={`snack-illustration snack-${index % 6}`} aria-hidden="true"><span>🍃</span><i>Selección</i></div>}
                 {!product.unlimited_stock && product.stock < 10 && product.stock > 0 && <span class="low-stock">Quedan {product.stock}</span>}
               </div>
               <div class="product-info">
@@ -123,6 +123,12 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       <div class="cart-footer"><div class="cart-total"><span>Total</span><strong id="cart-total">$0.00</strong></div><p class="cart-hint">El envío y la forma de pago se confirman por WhatsApp.</p><a class="whatsapp-button" id="whatsapp-button" href="#" target="_blank" rel="noopener" aria-disabled="true">Pedir por WhatsApp <span>↗</span></a><button class="clear-cart" id="clear-cart">Vaciar pedido</button></div>
     </aside>
 
+    <dialog class="image-lightbox" id="image-lightbox" aria-label="Imagen ampliada del producto">
+      <button class="lightbox-close" type="button" aria-label="Cerrar imagen ampliada">×</button>
+      <img id="lightbox-image" src="" alt="" />
+      <p id="lightbox-caption"></p>
+    </dialog>
+
     <script define:vars={{ products, whatsappNumber }}>
       const catalog = products;
       const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -130,6 +136,17 @@ const accents = ['lime', 'orange', 'pink', 'blue', 'yellow', 'purple'];
       let cart = [];
       const panel = document.querySelector('#cart-panel');
       const shade = document.querySelector('#cart-shade');
+      const lightbox = document.querySelector('#image-lightbox');
+      const lightboxImage = document.querySelector('#lightbox-image');
+      const closeLightbox = () => lightbox.close();
+      document.querySelectorAll('.product-image-trigger').forEach((button) => button.addEventListener('click', () => {
+        lightboxImage.src = button.dataset.image;
+        lightboxImage.alt = button.dataset.imageAlt;
+        document.querySelector('#lightbox-caption').textContent = button.dataset.imageAlt.replace('Flor de ', '');
+        lightbox.showModal();
+      }));
+      document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) closeLightbox(); });
       const openCart = () => { panel.classList.add('open'); shade.classList.add('visible'); panel.setAttribute('aria-hidden', 'false'); document.body.classList.add('cart-open'); };
       const closeCart = () => { panel.classList.remove('open'); shade.classList.remove('visible'); panel.setAttribute('aria-hidden', 'true'); document.body.classList.remove('cart-open'); };
       const render = () => {

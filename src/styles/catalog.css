@@ -37,6 +37,64 @@
   padding: 8px;
 }
 
+.product-image-trigger {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.product-image-trigger .product-photo {
+  pointer-events: none;
+}
+
+.image-zoom-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 9px;
+  border: 1px solid rgb(255 255 255 / 65%);
+  border-radius: 999px;
+  background: rgb(30 40 24 / 78%);
+  color: white;
+  font-size: 10px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.product-image-trigger:hover .image-zoom-hint,
+.product-image-trigger:focus-visible .image-zoom-hint { opacity: 1; transform: translateY(0); }
+.product-image-trigger:focus-visible { outline: 3px solid #d9e7a8; outline-offset: -4px; }
+
+.image-lightbox {
+  position: fixed;
+  width: min(92vw, 980px);
+  max-width: none;
+  max-height: 92vh;
+  padding: 22px;
+  overflow: visible;
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 10px;
+  background: #172018;
+  color: white;
+  box-shadow: 0 24px 90px rgb(0 0 0 / 45%);
+}
+
+.image-lightbox[open] { animation: lightbox-in 180ms ease-out both; }
+.image-lightbox::backdrop { background: rgb(9 14 10 / 84%); backdrop-filter: blur(5px); }
+.image-lightbox > img { display: block; width: 100%; max-height: calc(92vh - 82px); object-fit: contain; }
+.image-lightbox > p { margin: 12px 0 0; text-align: center; font-size: 13px; }
+.lightbox-close { position: absolute; z-index: 1; top: 9px; right: 9px; width: 38px; height: 38px; border: 1px solid rgb(255 255 255 / 30%); border-radius: 50%; background: rgb(20 27 20 / 88%); color: white; font-size: 26px; cursor: pointer; }
+.lightbox-close:focus-visible { outline: 2px solid white; outline-offset: 2px; }
+@keyframes lightbox-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+
 .product-facts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -109,6 +167,9 @@
 }
 
 @media (max-width: 600px) {
+  .image-lightbox { width: 96vw; padding: 12px; }
+  .image-lightbox > img { max-height: calc(90vh - 65px); }
+  .image-zoom-hint { opacity: 1; transform: none; }
   .product-facts {
     gap: 7px 5px;
   }
@@ -126,4 +187,9 @@
   .catalog-note {
     font-size: 9px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-lightbox[open] { animation: none; }
+  .image-zoom-hint { transition: none; }
 }
